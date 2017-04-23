@@ -6,7 +6,7 @@ var Sequelize = require('sequelize');
 var basename  = path.basename(module.filename);
 
 
-var env       = process.env.NODE_ENV || 'local';
+var env       = process.env.JAWSDB_URL || 'local';
 
 
 var config    = require('../config/config.json')[env];

@@ -10,8 +10,7 @@ module.exports = function(sequelize, DataTypes) {
         },
         name_1: { type: DataTypes.STRING, 
                allowNull: false},
-        name_2: { type: DataTypes.STRING, 
-                  allowNull: false},
+        name_2: { type: DataTypes.STRING},
         website: { type: DataTypes.STRING},
         phone: { type: DataTypes.STRING}
     
@@ -22,9 +21,6 @@ module.exports = function(sequelize, DataTypes) {
     classMethods: {
       associate: function(models) {
        healthFacilities.hasMany(models.LOCATIONS,{
-           foreignKey:'hf_id'
-       })
-       healthFacilities.hasMany(models.REFERENCES,{
            foreignKey:'hf_id'
        })
       }
@@ -47,10 +43,7 @@ module.exports = function(sequelize, DataTypes) {
            healthFacilities.create(req.body,{
                include:[
                    {
-                       model: sequelize.import('./address.js')
-                   },
-                   {
-                       model: sequelize.import('./reference_data.js')
+                       model: sequelize.import('./locations.js')
                    }
                ]
                
@@ -62,11 +55,7 @@ module.exports = function(sequelize, DataTypes) {
                include:[
                    {
                        model: sequelize.import('./locations.js')
-                   }/*,
-                   {
-                       model: sequelize.import('./referenceData.js')
-                   }*/
-               ]
+                   }
                
            }).then(onSuccess).error(onError); 
         },
@@ -76,10 +65,7 @@ module.exports = function(sequelize, DataTypes) {
            healthFacilities.findAll({
                include:[
                    {
-                       model: sequelize.import('./address.js')
-                   },
-                   {
-                       model: sequelize.import('./reference_data.js')
+                       model: sequelize.import('./locations.js')
                    }
                ],
                  where:{
@@ -100,20 +86,12 @@ module.exports = function(sequelize, DataTypes) {
            }).then(onSuccess).error(onError); 
         },
         
-        delete: function(req_ids, onSuccess, onError){
-            
+        delete: function( onSuccess, onError){
            healthFacilities.destroy({
-               include:[
-                   {
-                       model: sequelize.import('./address.js')
-                   },
-                   {
-                       model: sequelize.import('./reference_data.js')
-                   }
-               ],
+               
                  where:{
                      id:{
-                      $in: req_ids   
+                      $ne: null   
                      }
                  }
                

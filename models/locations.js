@@ -47,7 +47,14 @@ module.exports = function (sequelize, DataTypes) {
                         hf_id: req.param.id
                     }
                 }).then(onSuccess).error(onError);
-            }
+            },
+             delete: function( onSuccess, onError){
+           locations.destroy({
+               where: {
+                        hf_id: {$ne:null}
+                    }
+           }).then(onSuccess).error(onError); 
+        }  
         }
     });
     return locations;

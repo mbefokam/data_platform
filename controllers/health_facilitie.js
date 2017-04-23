@@ -4,7 +4,7 @@ var reference_data = require('../models/index').REFERENCES;
 var async = require('async');
 var empty = require('is-empty');
 var list = require('../models/index').LIST;
-
+var response= new Array();
 
 
 module.exports.data = function ( cb) {
@@ -17,10 +17,44 @@ module.exports.data = function ( cb) {
 
 }
 
+module.exports.delete = function ( cb) {
+   
+    /*var healthData = healthFacilitie.build();
+    
+    healthData.delete(function (data) {
+        cb(data);
+    })*/
+    /*var location = address.build();
+    
+                location.delete(function (data) {
+                    cb(data);
+                })*/
+    
+     async.waterfall([
+            function (callback) {
+              var location = address.build();
+    
+                location.delete(function (data) {
+                    callback(data);
+                })
+                
+            }
+        
+            ], function (err, noData) {
+              var healthData = healthFacilitie.build();
+    
+                healthData.delete(function (data) {
+                cb(data);
+                })
+            
+        })
+ 
+}
+
 module.exports.insertData = function (req, cb) {
     var health_facilitie;
     var data = req;
-    var response= [];
+    
     var location;
     var reference;
     for (var i = 0; i < data.length; i++) {
@@ -39,35 +73,11 @@ module.exports.insertData = function (req, cb) {
                 ,"latitude": data[i].latitude
                 ,"longitude" : data[i].longitude
                 };
-        console.log(data[i].street_2);
-         reference ={
-             "flag_saf" : data[i].flag_saf,
-             "flag_mhf" : data[i].flag_mhf,
-             "flag_mc" :  data[i].flag_mc,
-             "flag_md" :  data[i].flag_md,
-             "flag_np_ss" : data[i].flag_np_ss,
-             "flag_pi" : data[i].flag_pi,
-             "flag_gl" : data[i].flag_gl,
-             "flag_vet" : data[i].flag_vet,
-             "flag_pw" : data[i].flag_pw,
-             "flag_hv" : data[i].flag_hv,
-             "flag_dv" : data[i].flag_dv,
-             "flag_chld" : data[i].flag_chld,
-             "flag_yad" : data[i].flag_yad,
-             "flag_adlt" : data[i].flag_adlt,
-             "flag_snr" : data[i].flag_snr,
-             "flag_si" : data[i].flag_si,
-             "filter_military" : data[i].filter_military,
-             "filter_inpatient_svc" : data[i].filter_inpatient_svc,
-             "filter_residential_pgm" : data[i].filter_residential_pgm,
-             "vet" : data[i].vet  
-         }
         
         async.waterfall([
             function (callback) {
                 var facilitie = healthFacilitie.build();
                 facilitie.createFacilities(health_facilitie, function (healthFacilitie) {   
-                response.push(healthFacilitie);
                 callback(null, healthFacilitie);
                 });
                 
@@ -75,27 +85,18 @@ module.exports.insertData = function (req, cb) {
         
             ], function (err, healthFacilitie) {
              
-            async.parallel([
-             function (callback) {
-                 location.hf_id= healthFacilitie.id;
-                 
+            location.hf_id= healthFacilitie.id;
                 var locations = address.build();
                 locations.createAddress(location, function (locationData) {   
-                callback(locationData);
+                response.push(locationData);
+                
                 });
-            }, 
-            function (callback) {
-                reference.hf_id= healthFacilitie.id;    
-                var references = reference_data.build();
-                references.createReference(reference, function (referenceData) {   
-                callback(referenceData);
-                });
-            }
-         ], function (res) {
-               response.push(res);
-            })
+    
         })
     };
+    console.log("***************");
+    console.log(response);
+    console.log("****************");
     cb(response);
    
 }
