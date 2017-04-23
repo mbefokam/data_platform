@@ -1,0 +1,57 @@
+{
+  "name": "data_platform",
+  "version": "1.0.0",
+  "description": "pull the full list of all behavioral health facilities in NYC into a new platform",
+  "main": "js/app.js",
+  "scripts": {
+    "start": "node ./bin/www",
+    "lint": "eslint test/**",
+    "test": "cucumber-js test/features",
+    "watch": "node cuke-watcher.js",
+    "test-debug": "cross-env DEBUG=true cucumberjs --require lib"
+  },
+  "author": "pierre antoine",
+  "license": "ISC",
+   "dependencies": {
+    "assert": "^1.4.1",
+    "async": "^2.1.4",
+    "bluebird": "^3.4.6",
+    "body-parser": "~1.15.1",
+    "cookie-parser": "~1.4.3",
+    "cucumber": "^2.0.0-rc.2",
+    "debug": "~2.2.0",
+    "eslint": "^3.11.1",
+    "express": "~4.13.4",
+    "is-empty": "^1.0.0",
+    "jade": "~1.11.0",
+    "morgan": "~1.7.0",
+    "multer": "^1.2.0",
+    "mysql": "^2.12.0",
+    "q": "^1.0.1",
+    "relish": "*",
+    "sequelize": "*",
+    "sequelize-cli": "^2.4.0",
+    "sequelize-json": "^2.1.2",
+    "serve-favicon": "~2.3.0"
+  },
+  "devDependencies": {
+    "cucumber": "*",
+    "apickli": "*",
+    "assert": "*",
+    "chai": "*",
+    "chai-as-promised": "*",
+    "cross-env": "*",
+    "cucumber-html-reporter": "*",
+    "grunt": "*",
+    "grunt-contrib-watch": "*",
+    "grunt-cucumber": "*",
+    "lodash": "*",
+    "moment": "*",
+    "node-watch": "*",
+    "random-words": "*",
+    "request-promise": "*",
+    "sinon": "*",
+    "sinon-chai": "*"
+  }
+}
+
