@@ -19,17 +19,6 @@ module.exports.data = function ( cb) {
 
 module.exports.delete = function ( cb) {
    
-    /*var healthData = healthFacilitie.build();
-    
-    healthData.delete(function (data) {
-        cb(data);
-    })*/
-    /*var location = address.build();
-    
-                location.delete(function (data) {
-                    cb(data);
-                })*/
-    
      async.waterfall([
             function (callback) {
               var location = address.build();
@@ -51,10 +40,11 @@ module.exports.delete = function ( cb) {
  
 }
 
+// load the data from the 
 module.exports.insertData = function (req, cb) {
     var health_facilitie;
     var data = req;
-    
+        data = unique(data);
     var location;
     var reference;
     for (var i = 0; i < data.length; i++) {
@@ -94,9 +84,26 @@ module.exports.insertData = function (req, cb) {
     
         })
     };
-    console.log("***************");
-    console.log(response);
-    console.log("****************");
     cb(response);
    
+}
+
+var unique = function(origArr) {
+    var newArr = [],
+        origLen = origArr.length,
+        found, x, y;
+
+    for (x = 0; x < origLen; x++) {
+        found = undefined;
+        for (y = 0; y < newArr.length; y++) {
+            if (origArr[x] === newArr[y]) {
+                found = true;
+                break;
+            }
+        }
+        if (!found) {
+            newArr.push(origArr[x]);
+        }
+    }
+    return newArr;
 }

@@ -57,7 +57,7 @@ module.exports = function(sequelize, DataTypes) {
                        model: sequelize.import('./locations.js')
                    }
                
-           }).then(onSuccess).error(onError); 
+           ]}).then(onSuccess).error(onError); 
         },
         
         readby_id : function(req, onSuccess, onError){
