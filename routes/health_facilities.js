@@ -3,19 +3,17 @@ var router = express.Router();
 var request = require("request");
 var health_facilities = require('../controllers/health_facilitie')
 
-/*
-router.post('/data', function (req, res) {
-    health_facilities.insertData(req, function (success) {
-        if (success) {
-            res.json(success);
-        }
-        else {
-            res.json(401, "not data to return.");
-        }
-    }, function (err) {
-        res.status(500).json(err);
-    });
-});*/
+router.get('/health/facilities/active', function (req, res) {
+    
+     health_facilities.retrieveAllactive(function (healthData) {
+         if (healthData) {
+             res.json(healthData);
+         }
+         else {
+             res.send(401, "data not found in the table");
+         }
+     });
+ });
 
 router.delete('/data', function (req, res) {
     

@@ -59,6 +59,17 @@ module.exports = function(sequelize, DataTypes) {
 
            ]}).then(onSuccess).error(onError);
         },
+        retrieveAllactive : function(onSuccess, onError){
+           healthFacilities.findAll({
+               include:[
+                   {
+                       model: sequelize.import('./locations.js')
+                   }
+
+           ], where:{
+                     Quartet : "active"
+                 }}).then(onSuccess).error(onError);
+        },
 
         readby_fields : function(req, onSuccess, onError){
             

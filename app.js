@@ -4,12 +4,6 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
-var passport = require('passport');
-
-
-//require('./app_api/models/db');
-//require('./app_api/config/passport');
-
 
 var health_facilitie = require('./routes/health_facilities');
 var app = express();
@@ -21,10 +15,8 @@ app.use(bodyParser.urlencoded({
 }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
-//app.use(express.static(path.join(__dirname, 'app_client')));
 app.use(express.static(path.join(__dirname, 'node_modules')));
-//app.use(passport.initialize());
-//app.use(passport.session());
+
 
 
 app.use('/api', health_facilitie);

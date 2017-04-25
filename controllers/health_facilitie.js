@@ -7,12 +7,21 @@ var list = require('../models/index').LIST;
 var hfAndLoc = new Array();
 var response = new Array();
 var activeHf = new Array();
+
 module.exports.data = function (cb) {
     var healthData = healthfacilitie.build();
     healthData.retrieveAll(function (data) {
         cb(data);
     })
 }
+
+module.exports.retrieveAllactive = function (cb) {
+    var healthData = healthfacilitie.build();
+    healthData.retrieveAllactive(function (data) {
+        cb(data);
+    })
+}
+
 module.exports.delete = function (cb) {
         async.waterfall([
 
@@ -73,11 +82,20 @@ module.exports.insertData = function (req, cb) {
                   
                 }
                 else{
-                  health_facilitie.Quartet ="active"
+                    if(location.zip=="10001"){
+                    health_facilitie.Quartet ="active"
                     var facilitie = healthfacilitie.build()
                    facilitie.createFacilities(health_facilitie, function (healthFacilitie) {
                     callback(null, healthFacilitie)
-                }); 
+                        });  
+                    }
+                  else{
+                      health_facilitie.Quartet ="active"
+                      var facilitie = healthfacilitie.build()
+                     facilitie.createFacilities(health_facilitie, function (healthFacilitie) {
+                    callback(null, healthFacilitie)
+                   }); 
+                  }
                 }
                 
             },
