@@ -50,8 +50,6 @@
     "moment": "*",
     "node-watch": "*",
     "random-words": "*",
-    "request-promise": "*",
-    "sinon": "*",
-    "sinon-chai": "*"
+    "request-promise": "*"
   }
 }
