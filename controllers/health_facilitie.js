@@ -6,6 +6,7 @@ var empty = require('is-empty');
 var list = require('../models/index').LIST;
 var hfAndLoc = new Array();
 var response = new Array();
+var activeHf = new Array();
 module.exports.data = function (cb) {
     var healthData = healthfacilitie.build();
     healthData.retrieveAll(function (data) {
@@ -63,11 +64,18 @@ module.exports.insertData = function (req, cb) {
             },
          function (healthFacilitie, callback) {
                 if(healthFacilitie){
-                  callback(null, healthFacilitie)
+                   if(healthFacilitie.Quartet =="active"){
+                      activeHf.push(healthFacilitie) 
+                       callback(null, healthFacilitie)
+                   }else{
+                      callback(null, healthFacilitie) 
+                   }
+                  
                 }
                 else{
-                   var facilitie = healthfacilitie.build()
-                facilitie.createFacilities(health_facilitie, function (healthFacilitie) {
+                  health_facilitie.Quartet ="active"
+                    var facilitie = healthfacilitie.build()
+                   facilitie.createFacilities(health_facilitie, function (healthFacilitie) {
                     callback(null, healthFacilitie)
                 }); 
                 }
@@ -98,12 +106,12 @@ module.exports.insertData = function (req, cb) {
                 
             }
     ], function (err, result) {
-            // result now equals 'done'
             console.log('done') 
             response.push(hfAndLoc)
             dataCallback()
         });
     }, function (err) {
+        response.push(activeHf)
         console.log("Health Facilities For Loop Completed");
         cb(response);
     });
