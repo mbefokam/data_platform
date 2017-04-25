@@ -12,9 +12,10 @@
   },
   "author": "pierre antoine",
   "license": "ISC",
-   "dependencies": {
+  "dependencies": {
     "assert": "^1.4.1",
     "async": "^2.1.4",
+    "async-waterfall": "^0.1.5",
     "bluebird": "^3.4.6",
     "body-parser": "~1.15.1",
     "cookie-parser": "~1.4.3",
@@ -54,4 +55,3 @@
     "sinon-chai": "*"
   }
 }
-

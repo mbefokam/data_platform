@@ -22,7 +22,10 @@ module.exports = function (sequelize, DataTypes) {
         }
         , zip: {
             type: DataTypes.STRING
-        }, latitude: {
+        }
+        ,phone: { type: DataTypes.STRING}
+        ,website: { type: DataTypes.STRING}
+        , latitude: {
             type: DataTypes.STRING
         }, longitude: {
             type: DataTypes.STRING
@@ -48,6 +51,16 @@ module.exports = function (sequelize, DataTypes) {
                     }
                 }).then(onSuccess).error(onError);
             },
+        readby_fields : function(req, onSuccess, onError){
+            
+           locations.find({
+
+                 where:{
+                     $and: [{hf_id: req.hf_id}, {street_1: req.street_1}, {city: req.city}, {zip: req.zip}]
+                 }
+
+           }).then(onSuccess).error(onError);
+         },
              delete: function( onSuccess, onError){
            locations.destroy({
                where: {

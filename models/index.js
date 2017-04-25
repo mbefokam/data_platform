@@ -17,8 +17,16 @@ var password = config.password ? config.password : null;
 var sequelize = new Sequelize(
     config.database, 
     config.username, 
-    config.password, 
-    config
+    config.password,
+    config/*,{
+       pool: {
+           max: 5,
+            min: 0,
+        idle: 10000
+       }   
+    }*/
+   
+    
 );
 
 

@@ -1,109 +1,111 @@
-var healthFacilitie = require('../models/index').FACILITIES;
+var healthfacilitie = require('../models/index').FACILITIES;
 var address = require('../models/index').LOCATIONS;
 var reference_data = require('../models/index').REFERENCES;
 var async = require('async');
 var empty = require('is-empty');
 var list = require('../models/index').LIST;
-var response= new Array();
-
-
-module.exports.data = function ( cb) {
-   
-    var healthData = healthFacilitie.build();
-    
+var hfAndLoc = new Array();
+var response = new Array();
+module.exports.data = function (cb) {
+    var healthData = healthfacilitie.build();
     healthData.retrieveAll(function (data) {
         cb(data);
     })
-
 }
+module.exports.delete = function (cb) {
+        async.waterfall([
 
-module.exports.delete = function ( cb) {
-   
-     async.waterfall([
             function (callback) {
-              var location = address.build();
-    
+                var location = address.build();
                 location.delete(function (data) {
                     callback(data);
                 })
-                
             }
-        
+
             ], function (err, noData) {
-              var healthData = healthFacilitie.build();
-    
-                healthData.delete(function (data) {
+            var healthData = healthfacilitie.build();
+            healthData.delete(function (data) {
                 cb(data);
-                })
-            
+            })
         })
- 
-}
+    }
+
 
 // load the data from the 
 module.exports.insertData = function (req, cb) {
     var health_facilitie;
-    var data = req;
-        data = unique(data);
+    var heathFArrs = req;
     var location;
     var reference;
-    for (var i = 0; i < data.length; i++) {
-       
+     
+    async.forEachLimit(heathFArrs, 1, function (heathFArr, dataCallback) {
         health_facilitie = {
-            "name_1": data[i].name_1
-            , "name_2": data[i].name_2
-            , "website": data[i].website
-             ,"phone" : data[i].phone
+            "name_1": heathFArr.name_1
+            , "name_2": heathFArr.name_2
+            , "Quartet": "Inactive"
         };
-          location = {
-                 "street_1": data[i].street_1
-                ,"street_2": data[i].street_2
-                ,"city" : data[i].city
-                ,"zip": data[i].zip
-                ,"latitude": data[i].latitude
-                ,"longitude" : data[i].longitude
-                };
-        
+        location = {
+            "street_1": heathFArr.street_1
+            , "street_2": heathFArr.street_2
+            , "city": heathFArr.city
+            , "zip": heathFArr.zip
+            , "phone": heathFArr.phone
+            , "website": heathFArr.website
+            , "latitude": heathFArr.latitude
+            , "longitude": heathFArr.longitude
+        };
         async.waterfall([
-            function (callback) {
-                var facilitie = healthFacilitie.build();
-                facilitie.createFacilities(health_facilitie, function (healthFacilitie) {   
-                callback(null, healthFacilitie);
+         function (callback) {
+                var facilitie = healthfacilitie.build();
+                facilitie.readby_fields(health_facilitie, function (healthFacilitie) {
+                    callback(null, healthFacilitie);
                 });
+            },
+         function (healthFacilitie, callback) {
+                if(healthFacilitie){
+                  callback(null, healthFacilitie)
+                }
+                else{
+                   var facilitie = healthfacilitie.build()
+                facilitie.createFacilities(health_facilitie, function (healthFacilitie) {
+                    callback(null, healthFacilitie)
+                }); 
+                }
+                
+            },
+         function (healthFacilitie, callback) {
+                location.hf_id = healthFacilitie.id
+                var locations = address.build()
+                locations.readby_fields(location, function (locationData) {
+                    callback(null,healthFacilitie, location ,locationData)
+                });
+            }
+            ,
+            function (healthFacilitie, location ,locationData, callback) {
+                if(locationData){
+                    hfAndLoc.push(healthFacilitie)
+                    hfAndLoc.push(locationData)
+                  callback(null, response)
+                }
+                else{
+                var locations = address.build()
+                 locations.createAddress(location, function (locationData) {
+                   hfAndLoc.push(healthFacilitie)
+                   hfAndLoc.push(locationData)
+                  callback(null, response)
+               }) 
+                }
                 
             }
-        
-            ], function (err, healthFacilitie) {
-             
-            location.hf_id= healthFacilitie.id;
-                var locations = address.build();
-                locations.createAddress(location, function (locationData) {   
-                response.push(locationData);
-                
-                });
+    ], function (err, result) {
+            // result now equals 'done'
+            console.log('done') 
+            response.push(hfAndLoc)
+            dataCallback()
+        });
+    }, function (err) {
+        console.log("Health Facilities For Loop Completed");
+        cb(response);
+    });
     
-        })
-    };
-    cb(response);
-   
-}
-
-var unique = function(origArr) {
-    var newArr = [],
-        origLen = origArr.length,
-        found, x, y;
-
-    for (x = 0; x < origLen; x++) {
-        found = undefined;
-        for (y = 0; y < newArr.length; y++) {
-            if (origArr[x] === newArr[y]) {
-                found = true;
-                break;
-            }
-        }
-        if (!found) {
-            newArr.push(origArr[x]);
-        }
-    }
-    return newArr;
 }
