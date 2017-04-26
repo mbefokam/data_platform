@@ -90,7 +90,6 @@ module.exports.insertData = function (req, cb) {
                         });  
                     }
                   else{
-                      health_facilitie.Quartet ="active"
                       var facilitie = healthfacilitie.build()
                      facilitie.createFacilities(health_facilitie, function (healthFacilitie) {
                     callback(null, healthFacilitie)
