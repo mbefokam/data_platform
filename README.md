@@ -18,6 +18,7 @@ Installation:
     
 7- From the folder directory on cmd start you application with npm start.
 
+8- You can schedule nightly job to load data from the city data lake using the scheduler application  https://github.com/mbefokam/scheduler
 
 API Resources:
 To load the data from the City Data Storage to your Database 
